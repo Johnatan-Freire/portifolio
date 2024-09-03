@@ -42,7 +42,7 @@
                 <div class="contact-method">
                     <span class="icon brands alt fa-linkedin-in"></span>
                     <h3>LinkedIn</h3>
-                    <span><a href="https://www.linkedin.com/in/johnatan-freire-dos-santos-702b65282/" target="_blank">Johnatan Freire dos Santos</a></span>
+                    <span>Acesse meu <a href="https://www.linkedin.com/in/johnatan-freire-dos-santos-702b65282/" target="_blank">LinkedIn</a></span>
                 </div>
             </section>
         </section>

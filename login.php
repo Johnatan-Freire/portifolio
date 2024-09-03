@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             if (password_verify($password, $row['senha'])) {
-                session_regenerate_id(true); // Regenerate session ID
+                session_regenerate_id(true);
                 $_SESSION['user_id'] = $row['id']; 
                 $_SESSION['user_email'] = $row['email'];
                 header("Location: sistema/index.php");

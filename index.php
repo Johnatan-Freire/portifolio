@@ -26,6 +26,28 @@
 
 	<!-- One -->
 	<section id="one" class="tiles">
+	<article>
+			<span class="image">
+				<img src="images/pic01.jpg" alt="" />
+			</span>
+			<header class="major">
+				<h3><a href="landing.php" class="link">Aliquam</a></h3>
+				<p>Ipsum dolor sit amet</p>
+			</header>
+
+		</article>
+
+		<article>
+			<span class="image">
+				<img src="images/pic01.jpg" alt="" />
+			</span>
+			<header class="major">
+				<h3><a href="landing.php" class="link">Aliquam</a></h3>
+				<p>Ipsum dolor sit amet</p>
+			</header>
+
+		</article>
+
 		<article>
 			<span class="image">
 				<img src="images/pic01.jpg" alt="" />
@@ -40,13 +62,16 @@
 
 	<!-- Two -->
 	<section id="two">
-		<div class="inner">
+	<div class="inner">
 			<header class="major">
 				<h2>Transforme sua ideia em realidade</h2>
 			</header>
 			<p>Precisa de um site ou sistema personalizado? Estou aqui para ajudar! Com experiência em HTML, CSS, PHP, Laravel, Vue.js, Java e Spring Boot, posso criar a solução perfeita para você. Entre em contato comigo para dar vida ao seu projeto!</p>
 		</div>
+		
 	</section>
+
+	
 
 </div>
 <?php include('rodape.php') ?>

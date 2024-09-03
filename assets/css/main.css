@@ -4040,47 +4040,8 @@ input, select, textarea {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.projetos table {
-	width: 100%;
-	border-collapse: collapse;
-	margin: 20px 0;
-	font-family: Arial, sans-serif;
-	font-size: 16px;
-	text-align: left;
-}
-
-.projetos thead {
-	background-color: #4CAF50;
-	color: white;
-}
-
-.projetos th, td {
-	padding: 12px 15px;
-	border: 1px solid #ddd;
-}
-
-.projetos tbody tr:nth-child(even) {
-	background-color: #f2f2f2;
-}
-
-.projetos img {
-	width: 50px;
+.projetos img{
+	width: 90px;
 	height: 50px;
-	object-fit: cover;
-	border-radius: 5px;
+	border-radius: 2px;
 }

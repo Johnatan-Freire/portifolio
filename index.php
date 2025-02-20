@@ -5,7 +5,11 @@
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 
-<?php include('cabecalho.php') ?>
+<?php 
+include('cabecalho.php'); 
+$query = "SELECT nome, imagem, descricao FROM projetos";
+$result = $conn->query($query);
+?>
 <!-- Banner -->
 <section id="banner" class="major">
 	<div class="inner">
@@ -26,38 +30,17 @@
 
 	<!-- One -->
 	<section id="one" class="tiles">
-	<article>
-			<span class="image">
-				<img src="images/pic01.jpg" alt="" />
-			</span>
-			<header class="major">
-				<h3><a href="landing.php" class="link">Aliquam</a></h3>
-				<p>Ipsum dolor sit amet</p>
-			</header>
-
-		</article>
-
+	<?php while ($row = $result->fetch_assoc()): ?>
 		<article>
 			<span class="image">
-				<img src="images/pic01.jpg" alt="" />
+				<img src="sistema/<?php echo htmlspecialchars($row['imagem']); ?>" alt="Imagem do projeto" />
 			</span>
 			<header class="major">
-				<h3><a href="landing.php" class="link">Aliquam</a></h3>
-				<p>Ipsum dolor sit amet</p>
+				<h3><?php echo htmlspecialchars($row['nome']); ?></h3>
+				<p><?php echo htmlspecialchars($row['descricao']); ?></p>
 			</header>
-
 		</article>
-
-		<article>
-			<span class="image">
-				<img src="images/pic01.jpg" alt="" />
-			</span>
-			<header class="major">
-				<h3><a href="landing.php" class="link">Aliquam</a></h3>
-				<p>Ipsum dolor sit amet</p>
-			</header>
-
-		</article>
+	<?php endwhile; ?>
 	</section>
 
 	<!-- Two -->

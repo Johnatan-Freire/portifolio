@@ -7,7 +7,7 @@
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 	</head>
 	<body class="is-preload">
-
+<?php include('sistema/config/conexao.php'); ?>
 		<!-- Wrapper -->
 			<div id="wrapper">
 

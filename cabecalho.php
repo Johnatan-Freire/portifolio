@@ -24,7 +24,7 @@
 						<ul class="links">
 							<li><a href="index.php">Início</a></li>
 							<li><a href="landing.html">Curriculo</a></li>
-							<li><a href="generic.html">Contato</a></li>
+							<li><a href="#contact">Contato</a></li>
 						</ul>
 						<ul class="actions stacked">
 							<li><a href="login.php" class="button fit">Login</a></li>

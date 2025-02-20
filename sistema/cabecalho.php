@@ -12,6 +12,16 @@
 
 <body class="is-preload">
 
+	<?php
+	session_start();
+
+	if (!isset($_SESSION['user_id'])) {
+		header("Location: ./login.php");
+		exit();
+	}
+	include('config/conexao.php');
+	?>
+
 	<!-- Wrapper -->
 	<div id="wrapper">
 
@@ -26,9 +36,9 @@
 		<!-- Menu -->
 		<nav id="menu">
 			<ul class="links">
-				<li><a href="index.php">Projetos</a></li>
+				<li><a href="projetos.php">Projetos</a></li>
 				<li><a href="landing.html">Curriculo</a></li>
-				<li><a href="generic.html">Contato</a></li>
+				<li><a href="#contact">Contato</a></li>
 			</ul>
 			<ul class="actions stacked">
 				<li><a href="../logout.php" class="button fit">Sair</a></li>

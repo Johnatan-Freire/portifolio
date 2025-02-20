@@ -5,8 +5,8 @@
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 
-<?php 
-include('cabecalho.php'); 
+<?php
+include('cabecalho.php');
 $query = "SELECT nome, imagem, descricao FROM projetos";
 $result = $conn->query($query);
 ?>
@@ -30,31 +30,35 @@ $result = $conn->query($query);
 
 	<!-- One -->
 	<section id="one" class="tiles">
-	<?php while ($row = $result->fetch_assoc()): ?>
-		<article>
+		<?php while ($row = $result->fetch_assoc()): ?>
+			<article>
 			<span class="image">
 				<img src="sistema/<?php echo htmlspecialchars($row['imagem']); ?>" alt="Imagem do projeto" />
 			</span>
 			<header class="major">
 				<h3><?php echo htmlspecialchars($row['nome']); ?></h3>
 				<p><?php echo htmlspecialchars($row['descricao']); ?></p>
+				<p><strong>Tecnologias:</strong> <?php echo isset($row['tecnologias']) ? htmlspecialchars($row['tecnologias']) : 'Não informado'; ?></p>
+				<ul class="actions">
+					<li><a href="<?php echo isset($row['repositorio']) ? htmlspecialchars($row['repositorio']) : '#'; ?>" target="_blank" class="button next scrolly">Ver Repositório</a></li>
+				</ul>
 			</header>
 		</article>
-	<?php endwhile; ?>
+		<?php endwhile; ?>
 	</section>
 
 	<!-- Two -->
 	<section id="two">
-	<div class="inner">
+		<div class="inner">
 			<header class="major">
 				<h2>Transforme sua ideia em realidade</h2>
 			</header>
 			<p>Precisa de um site ou sistema personalizado? Estou aqui para ajudar! Com experiência em HTML, CSS, PHP, Laravel, Vue.js, Java e Spring Boot, posso criar a solução perfeita para você. Entre em contato comigo para dar vida ao seu projeto!</p>
 		</div>
-		
+
 	</section>
 
-	
+
 
 </div>
 <?php include('rodape.php') ?>

@@ -1,13 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<body>
     <?php
     include('cabecalho.php');
 
@@ -16,6 +6,8 @@
         $tecnologias = trim($_POST["tecnologias"]);
         $descricao = trim($_POST["descricao"]);
         $repositorio = trim($_POST["repositorio"]);
+        $link_projeto = trim($_POST["link_projeto"]); // Novo campo para link do projeto
+        $privado = isset($_POST["privado"]) ? 1 : 0;
 
         // Configuração para upload de imagem
         $imagem = "";
@@ -32,9 +24,9 @@
             }
         }
 
-        if (!empty($nome) && !empty($tecnologias) && !empty($descricao) && !empty($repositorio)) {
-            $stmt = $conn->prepare("INSERT INTO projetos (nome, imagem, tecnologias, descricao, repositorio) VALUES (?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssss", $nome, $imagem, $tecnologias, $descricao, $repositorio);
+        if (!empty($nome) && !empty($tecnologias) && !empty($descricao) && !empty($repositorio) && !empty($link_projeto)) {
+            $stmt = $conn->prepare("INSERT INTO projetos (nome, imagem, tecnologias, descricao, repositorio, link_projeto, privado) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssssi", $nome, $imagem, $tecnologias, $descricao, $repositorio, $link_projeto, $privado);
 
             if ($stmt->execute()) {
                 echo "<p style='color: green;'>Projeto cadastrado com sucesso!</p>";
@@ -72,15 +64,23 @@
                 <label for="repositorio">Repositório</label>
                 <input type="url" name="repositorio" id="repositorio" placeholder="Link para o repositório" required />
             </div>
+            <div class="field">
+                <label for="link_projeto">Link do Projeto</label> <!-- Novo campo para link do projeto -->
+                <input type="url" name="link_projeto" id="link_projeto" placeholder="Link do projeto online" required />
+            </div>
+
+            <div class="field">
+                <label for="privado">Repositório Privado</label>
+                <label class="switch">
+                    <input type="checkbox" name="privado" id="privado">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
             <div class="actions">
                 <input type="submit" value="Salvar Projeto" class="btn-primary" />
             </div>
         </form>
     </div>
 
-
     <?php include('rodape.php') ?>
-
-</body>
-
-</html>

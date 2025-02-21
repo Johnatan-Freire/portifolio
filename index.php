@@ -7,7 +7,7 @@
 
 <?php
 include('cabecalho.php');
-$query = "SELECT nome, imagem, descricao FROM projetos";
+$query = "SELECT nome, imagem, descricao, tecnologias, repositorio, privado, link_projeto FROM projetos";
 $result = $conn->query($query);
 ?>
 <!-- Banner -->
@@ -17,7 +17,7 @@ $result = $conn->query($query);
 			<h1>Projetos</h1>
 		</header>
 		<div class="content">
-			<p>Portifólia feito com template <a href="https://html5up.net/forty">HTML5 UP</a>, PHP 8 e MySQL</p>
+			<p>Portfólio feito com template <a href="https://html5up.net/forty">HTML5 UP</a>, PHP 8 e MySQL</p>
 			<ul class="actions">
 				<li><a href="https://github.com/Johnatan-Freire/portifolio" target="_blank" class="button next scrolly">Repositório</a></li>
 			</ul>
@@ -31,19 +31,36 @@ $result = $conn->query($query);
 	<!-- One -->
 	<section id="one" class="tiles">
 		<?php while ($row = $result->fetch_assoc()): ?>
-			<article>
-			<span class="image">
-				<img src="sistema/<?php echo htmlspecialchars($row['imagem']); ?>" alt="Imagem do projeto" />
-			</span>
-			<header class="major">
-				<h3><?php echo htmlspecialchars($row['nome']); ?></h3>
-				<p><?php echo htmlspecialchars($row['descricao']); ?></p>
-				<p><strong>Tecnologias:</strong> <?php echo isset($row['tecnologias']) ? htmlspecialchars($row['tecnologias']) : 'Não informado'; ?></p>
-				<ul class="actions">
-					<li><a href="<?php echo isset($row['repositorio']) ? htmlspecialchars($row['repositorio']) : '#'; ?>" target="_blank" class="button next scrolly">Ver Repositório</a></li>
-				</ul>
-			</header>
-		</article>
+			<article <?php if (!empty($row['link_projeto'])): ?> onclick="window.location.href='<?php echo htmlspecialchars($row['link_projeto']); ?>';" <?php endif; ?> style="cursor: pointer;">
+				<span class="image">
+					<img src="sistema/<?php echo htmlspecialchars($row['imagem']); ?>" alt="Imagem do projeto" />
+				</span>
+				<header class="major">
+					<h3><?php echo htmlspecialchars($row['nome']); ?></h3>
+					<p class="descricao"><?php echo htmlspecialchars($row['descricao']); ?></p>
+					
+					<div class="tecnologia">
+						<?php if (!empty($row['tecnologias'])): ?>
+							<?php foreach (explode(',', $row['tecnologias']) as $tech): ?>
+								<span class="tecnologias"> <?php echo htmlspecialchars(trim($tech)); ?> </span>
+							<?php endforeach; ?>
+						<?php else: ?>
+							<span class="tecnologias">Não informado</span>
+						<?php endif; ?>
+					</div>
+					<ul class="actions">
+						<li>
+							<a href="<?php echo htmlspecialchars($row['repositorio']); ?>" target="_blank" class="button next scrolly">
+								<?php if ($row['privado'] == 1): ?>
+									<i class="fas fa-lock"></i> Repositório Privado
+								<?php else: ?>
+									Ver Repositório
+								<?php endif; ?>
+							</a>
+						</li>
+					</ul>
+				</header>
+			</article>
 		<?php endwhile; ?>
 	</section>
 
@@ -55,10 +72,6 @@ $result = $conn->query($query);
 			</header>
 			<p>Precisa de um site ou sistema personalizado? Estou aqui para ajudar! Com experiência em HTML, CSS, PHP, Laravel, Vue.js, Java e Spring Boot, posso criar a solução perfeita para você. Entre em contato comigo para dar vida ao seu projeto!</p>
 		</div>
-
 	</section>
-
-
-
 </div>
-<?php include('rodape.php') ?>
+<?php include('rodape.php'); ?>

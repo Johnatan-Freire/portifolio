@@ -1,5 +1,8 @@
     <?php
     include('cabecalho.php');
+
+    $query = "SELECT * FROM projetos ORDER BY data_criacao DESC";
+    $result = $conn->query($query);
     ?>
 
     <h1>Projetos</h1>
@@ -8,7 +11,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>Data de modificação</th>
+                    <th>Data da Criação</th>
                     <th>Imagem</th>
                     <th>Nome</th>
                     <th>Descrição</th>
@@ -16,46 +19,26 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>31/08/2024</td>
-                    <td><img src="https://www.petz.com.br/blog/wp-content/uploads/2021/11/enxoval-para-gato-3-Copia.jpg" alt="Imagem 1"></td>
-                    <td>Calculadora</td>
-                    <td>Software simples de calculadora</td>
-                    <td>
-                        <a href="#" class="icon solid alt fa-edit"></a>
-                        <a href="#" class="icon solid alt fa-trash"></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>30/08/2024</td>
-                    <td><img src="https://static.nationalgeographicbrasil.com/files/styles/image_3200/public/75552.webp?w=1600&h=900" alt="Imagem 2"></td>
-                    <td>Sistema escolar</td>
-                    <td>Gestão escolar</td>
-                    <td>
-                        <a href="#" class="icon solid alt fa-edit"></a>
-                        <a href="#" class="icon solid alt fa-trash"></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>29/08/2024</td>
-                    <td><img src="https://www.organnact.com.br/wp-content/uploads/2022/07/bigstock-Frozen-Old-Sad-White-British-S-449433815-1.jpg" alt="Imagem 3"></td>
-                    <td>Página web</td>
-                    <td>Página web com CSS e HTML</td>
-                    <td>
-                        <a href="#" class="icon solid alt fa-edit"></a>
-                        <a href="#" class="icon solid alt fa-trash"></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>29/08/2024</td>
-                    <td><img src="https://blog.cobasi.com.br/wp-content/uploads/2020/06/cuidar-de-gato-capa.png" alt="Imagem 3"></td>
-                    <td>Página web</td>
-                    <td>Página web com CSS e HTML</td>
-                    <td>
-                        <a href="#" class="icon solid alt fa-edit"></a>
-                        <a href="#" class="icon solid alt fa-trash"></a>
-                    </td>
-                </tr>
+                <?php if ($result && $result->num_rows > 0): ?>
+                    <?php while ($row = $result->fetch_assoc()): ?>
+                        <tr>
+                            <td><?php echo date("d/m/Y", strtotime($row["data_criacao"])); ?></td>
+                            <td>
+                                <img src="<?php echo $row["imagem"]; ?>" alt="Imagem do projeto <?php echo $row["nome"]; ?>" style="width: 100px;">
+                            </td>
+                            <td><?php echo $row["nome"]; ?></td>
+                            <td><?php echo $row["descricao"]; ?></td>
+                            <td>
+                                <a href="projetos.php?id=<?php echo $row["id"]; ?>" class="icon solid alt fa-edit"></a>
+                                <a href="config/excluir.php?id=<?php echo $row["id"]; ?>" class="icon solid alt fa-trash"></a>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="5">Nenhum projeto encontrado.</td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
 

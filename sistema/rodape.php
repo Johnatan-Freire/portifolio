@@ -2,7 +2,7 @@
 <footer id="admin-footer">
     <div class="inner">
         
-        <p>&copy; 2024 Painel Administrativo. Todos os direitos reservados.</p>
+        <p>&copy; 2025 Painel Administrativo.</p>
     </div>
 </footer>
 

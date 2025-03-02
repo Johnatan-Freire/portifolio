@@ -1,13 +1,25 @@
 <?php
 include('cabecalho.php');
 
+// Criação de tabela 
+$conn->query("CREATE TABLE IF NOT EXISTS projetos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    imagem VARCHAR(255) NULL,
+    tecnologias VARCHAR(255) NOT NULL,
+    descricao TEXT NOT NULL,
+    repositorio VARCHAR(255) NOT NULL,
+    link_projeto VARCHAR(255) NOT NULL,
+    privado TINYINT(1) NOT NULL DEFAULT 0
+)");
+
 $id = isset($_GET['id']) ? intval($_GET['id']) : null;
 
 $projeto = [];
 
 if ($id) {
     $stmt = $conn->prepare("SELECT * FROM projetos WHERE id = ?");
-    $stmt->bind_param("i", $id); // 'i' indica que o parâmetro é um inteiro
+    $stmt->bind_param("i", $id); 
     $stmt->execute();
     $result = $stmt->get_result();
     

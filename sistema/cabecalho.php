@@ -37,8 +37,7 @@
 		<nav id="menu">
 			<ul class="links">
 				<li><a href="projetos.php">Projetos</a></li>
-				<li><a href="landing.html">Curriculo</a></li>
-				<li><a href="#contact">Contato</a></li>
+				<li><a href="contato.php">Curriculo e Contatos</a></li>
 			</ul>
 			<ul class="actions stacked">
 				<li><a href="../logout.php" class="button fit">Sair</a></li>

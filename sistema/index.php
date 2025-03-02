@@ -30,7 +30,7 @@
                             <td><?php echo $row["descricao"]; ?></td>
                             <td>
                                 <a href="projetos.php?id=<?php echo $row["id"]; ?>" class="icon solid alt fa-edit"></a>
-                                <a href="config/excluir.php?id=<?php echo $row["id"]; ?>" class="icon solid alt fa-trash"></a>
+                                <a href="config/excluirProjeto.php?id=<?php echo $row["id"]; ?>" class="icon solid alt fa-trash"></a>
                             </td>
                         </tr>
                     <?php endwhile; ?>

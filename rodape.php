@@ -11,28 +11,29 @@ $contato = $result->fetch_assoc() ?: [
 <!-- Contact -->
 <section id="contact">
     <div class="inner">
-        <section>
-            <form method="post" action="#">
-                <div class="fields">
-                    <div class="field half">
-                        <label for="name">Nome</label>
-                        <input type="text" name="name" id="name" />
-                    </div>
-                    <div class="field half">
-                        <label for="email">E-mail</label>
-                        <input type="text" name="email" id="email" />
-                    </div>
-                    <div class="field">
-                        <label for="message">Mensagem</label>
-                        <textarea name="message" id="message" rows="6"></textarea>
-                    </div>
-                </div>
-                <ul class="actions">
-                    <li><input type="submit" value="Enviar" class="primary" /></li>
-                    <li><input type="reset" value="Limpar" /></li>
-                </ul>
-            </form>
-        </section>
+    <section>
+    <form method="post" action="sistema/config/enviarEmail.php">
+        <div class="fields">
+            <div class="field half">
+                <label for="name">Nome</label>
+                <input type="text" name="name" id="name" required />
+            </div>
+            <div class="field half">
+                <label for="email">E-mail</label>
+                <input type="email" name="email" id="email" required />
+            </div>
+            <div class="field">
+                <label for="message">Mensagem</label>
+                <textarea name="message" id="message" rows="6" required></textarea>
+            </div>
+        </div>
+        <ul class="actions">
+            <li><input type="submit" value="Enviar" class="primary" /></li>
+            <li><input type="reset" value="Limpar" /></li>
+        </ul>
+    </form>
+</section>
+
         <section class="split">
             <section>
                 <div class="contact-method">

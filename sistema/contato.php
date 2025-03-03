@@ -1,7 +1,7 @@
 <?php
 include('cabecalho.php');
 
-// Criação de tabela 
+// Criação tabela 
 $conn->query("CREATE TABLE IF NOT EXISTS contato (
     id INT PRIMARY KEY CHECK (id = 1),
     email VARCHAR(255) NOT NULL,
@@ -19,78 +19,114 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $celular = trim($_POST["celular"] ?? '');
     $linkedin = trim($_POST["linkedin"] ?? '');
     $github = trim($_POST["github"] ?? '');
-    
-    // Upload do currículo
+
+    // Upload currículo (PDF)
     $curriculo = $contato["curriculo"] ?? "";
     if (!empty($_FILES["curriculo"]["name"])) {
         $target_dir = "uploads/";
         $extensao = strtolower(pathinfo($_FILES["curriculo"]["name"], PATHINFO_EXTENSION));
+
         if ($extensao !== "pdf") {
-            echo "<p style='color: red;'>Apenas arquivos PDF são permitidos.</p>";
+            echo "<div style='background-color: #ffcccc; padding: 10px; border-radius: 5px; color: #900;'>❌ Apenas arquivos PDF são permitidos.</div>";
         } else {
             $curriculo = $target_dir . basename($_FILES["curriculo"]["name"]);
             if (move_uploaded_file($_FILES["curriculo"]["tmp_name"], $curriculo)) {
-                echo "<p style='color: green;'>Currículo enviado com sucesso!</p>";
+                echo "<div style='background-color: #ccffcc; padding: 10px; border-radius: 5px; color: #060;'>✅ Currículo enviado com sucesso!</div>";
             } else {
-                echo "<p style='color: red;'>Erro ao enviar currículo.</p>";
+                echo "<div style='background-color: #ffcccc; padding: 10px; border-radius: 5px; color: #900;'>❌ Erro ao enviar currículo.</div>";
                 $curriculo = $contato["curriculo"] ?? "";
             }
         }
     }
 
+    // Validação dos campos
     if (!empty($email) && !empty($celular) && !empty($linkedin) && !empty($github)) {
         if ($contato) {
-            // Atualiza o registro existente
+            // Atualizar dados 
             $stmt = $conn->prepare("UPDATE contato SET email = ?, celular = ?, linkedin = ?, github = ?, curriculo = ? WHERE id = 1");
             $stmt->bind_param("sssss", $email, $celular, $linkedin, $github, $curriculo);
         } else {
-            // Insere o registro
+            // Inserir dados
             $stmt = $conn->prepare("INSERT INTO contato (id, email, celular, linkedin, github, curriculo) VALUES (1, ?, ?, ?, ?, ?)");
             $stmt->bind_param("sssss", $email, $celular, $linkedin, $github, $curriculo);
         }
-        
+
         if ($stmt->execute()) {
-            echo "<p style='color: green;'>Informações salvas com sucesso!</p>";
+            echo "<div style='background-color: #ccffcc; padding: 10px; border-radius: 5px; color: #060;'>✅ Informações salvas com sucesso!</div>";
         } else {
-            echo "<p style='color: red;'>Erro ao salvar informações: " . $conn->error . "</p>";
+            echo "<div style='background-color: #ffcccc; padding: 10px; border-radius: 5px; color: #900;'>❌ Erro ao salvar informações: " . $conn->error . "</div>";
         }
         $stmt->close();
     } else {
-        echo "<p style='color: red;'>Todos os campos são obrigatórios!</p>";
+        echo "<div style='background-color: #ffcccc; padding: 10px; border-radius: 5px; color: #900;'>⚠️ Todos os campos são obrigatórios!</div>";
     }
 }
 ?>
 
+<!-- Formulário -->
 <div class="form-container">
     <h1>Informações de Contato</h1>
+
     <form method="post" action="" enctype="multipart/form-data">
+        <!-- E-mail -->
         <div class="field">
-            <label for="email">E-mail</label>
-            <input type="email" name="email" id="email" required value="<?php echo htmlspecialchars($contato['email'] ?? ''); ?>" />
+            <label for="email">📧 E-mail</label>
+            <input type="email" name="email" id="email" placeholder="Digite seu e-mail" required
+                value="<?php echo htmlspecialchars($contato['email'] ?? ''); ?>" />
         </div>
+
+        <!-- Celular -->
         <div class="field">
-            <label for="celular">Celular</label>
-            <input type="text" name="celular" id="celular" required value="<?php echo htmlspecialchars($contato['celular'] ?? ''); ?>" />
+            <label for="celular">📱 celular</label>
+            <input type="tel" name="celular" id="celular" onkeyup="handlePhone(event)" placeholder="Digite seu celular" required
+                value="<?php echo htmlspecialchars($contato['celular'] ?? ''); ?>" />
         </div>
+
+        <!-- LinkedIn -->
         <div class="field">
-            <label for="linkedin">LinkedIn</label>
-            <input type="url" name="linkedin" id="linkedin" required value="<?php echo htmlspecialchars($contato['linkedin'] ?? ''); ?>" />
+            <label for="linkedin">🔗 LinkedIn</label>
+            <input type="url" name="linkedin" id="linkedin" placeholder="URL do LinkedIn" required
+                value="<?php echo htmlspecialchars($contato['linkedin'] ?? ''); ?>" />
         </div>
+
+        <!-- GitHub -->
         <div class="field">
-            <label for="github">GitHub</label>
-            <input type="url" name="github" id="github" required value="<?php echo htmlspecialchars($contato['github'] ?? ''); ?>" />
+            <label for="github">🐙 GitHub</label>
+            <input type="url" name="github" id="github" placeholder="URL do GitHub" required
+                value="<?php echo htmlspecialchars($contato['github'] ?? ''); ?>" />
         </div>
+
+        <!-- Currículo -->
         <div class="field">
-            <label for="curriculo">Currículo (PDF)</label>
+            <label for="curriculo">📄 Currículo (PDF)</label>
             <?php if (!empty($contato['curriculo'])): ?>
-                <p><a href="<?php echo $contato['curriculo']; ?>" target="_blank">Ver currículo atual</a></p>
+                <p><a href="<?php echo $contato['curriculo']; ?>" target="_blank">📂 Ver currículo atual</a></p>
             <?php endif; ?>
             <input type="file" name="curriculo" id="curriculo" accept="application/pdf" />
         </div>
+
+        <!-- Botão de envio -->
         <div class="actions">
-            <input type="submit" value="Salvar Informações" class="btn-primary" />
+            <input type="submit" value="💾 Salvar Informações" class="btn-primary" />
         </div>
     </form>
 </div>
+
+<script>
+    //Mascara Celular
+    const handlePhone = (event) => {
+        let input = event.target
+        input.value = phoneMask(input.value)
+    }
+
+    const phoneMask = (value) => {
+        if (!value) return ""
+        value = value.replace(/\D/g, '')
+        value = value.replace(/(\d{2})(\d)/, "($1) $2")
+        value = value.replace(/(\d)(\d{4})$/, "$1-$2")
+        return value
+    }
+</script>
+
 
 <?php include('rodape.php'); ?>

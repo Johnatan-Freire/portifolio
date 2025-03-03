@@ -29,8 +29,10 @@
                             <td><?php echo $row["nome"]; ?></td>
                             <td><?php echo $row["descricao"]; ?></td>
                             <td>
-                                <a href="projetos.php?id=<?php echo $row["id"]; ?>" class="icon solid alt fa-edit"></a>
-                                <a href="config/excluirProjeto.php?id=<?php echo $row["id"]; ?>" class="icon solid alt fa-trash"></a>
+                                <div style="display: flex; gap: 10px;">
+                                    <a href="projetos.php?id=<?php echo $row["id"]; ?>" class="icon solid alt fa-edit"></a>
+                                    <a href="config/excluirProjeto.php?id=<?php echo $row["id"]; ?>" class="icon solid alt fa-trash"></a>
+                                </div>
                             </td>
                         </tr>
                     <?php endwhile; ?>

@@ -1,7 +1,7 @@
 <?php
 include('cabecalho.php');
 
-// Criação de tabela 
+// Criação tabela
 $conn->query("CREATE TABLE IF NOT EXISTS projetos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
@@ -14,151 +14,143 @@ $conn->query("CREATE TABLE IF NOT EXISTS projetos (
 )");
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : null;
-
 $projeto = [];
 
+// Buscar ID no banco
 if ($id) {
     $stmt = $conn->prepare("SELECT * FROM projetos WHERE id = ?");
-    $stmt->bind_param("i", $id); 
+    $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     if ($result->num_rows > 0) {
-        $projeto = $result->fetch_assoc();
+        $projeto = $result->fetch_assoc(); 
     } else {
-        echo "<p style='color: red;'>Projeto não encontrado.</p>";
+        echo "<div style='background-color: #ffcccc; padding: 10px; border-radius: 5px; color: #900;'>❌ Projeto não encontrado.</div>";
         exit;
     }
     $stmt->close();
 }
 
+// Tratamento formulário de envio
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = trim($_POST["nome"]);
     $tecnologias = trim($_POST["tecnologias"]);
     $descricao = trim($_POST["descricao"]);
     $repositorio = trim($_POST["repositorio"]);
     $link_projeto = trim($_POST["link_projeto"]);
-    $privado = isset($_POST["privado"]) ? 1 : 0; 
+    $privado = isset($_POST["privado"]) ? 1 : 0; // Define se o repositório é privado ou não
 
-    // Upload de imagem
+    // Upload imagem do projeto
     $imagem = "";
     if (!empty($_FILES["imagem"]["name"])) {
-        $target_dir = "uploads/"; // Diretório onde as imagens serão armazenadas
+        $target_dir = "uploads/"; // Diretório das imagens
         $imagem = $target_dir . basename($_FILES["imagem"]["name"]);
 
-        // Mover arquivo temporário para o diretório de uploads
-        if (move_uploaded_file($_FILES["imagem"]["tmp_name"], $imagem)) {
-            echo "<p style='color: green;'>Imagem enviada com sucesso!</p>";
-        } else {
-            echo "<p style='color: red;'>Erro ao enviar imagem.</p>";
+        // Move o arquivo para o diretório
+        if (!move_uploaded_file($_FILES["imagem"]["tmp_name"], $imagem)) {
+            echo "<div style='background-color: #ffcccc; padding: 10px; border-radius: 5px; color: #900;'>❌ Erro ao enviar imagem.</div>";
             $imagem = "";
         }
     }
 
-    // Mantém a imagem atual na edição
     if ($id && empty($imagem)) {
         $imagem = $projeto["imagem"];
     }
 
-    // Validar campos 
+    // Validação dos campos
     if (!empty($nome) && !empty($tecnologias) && !empty($descricao) && !empty($repositorio) && !empty($link_projeto)) {
-        // Atualizar registro
         if ($id) {
+            // Atualizar projeto existente
             $stmt = $conn->prepare("UPDATE projetos SET nome = ?, imagem = ?, tecnologias = ?, descricao = ?, repositorio = ?, link_projeto = ?, privado = ? WHERE id = ?");
             $stmt->bind_param("ssssssii", $nome, $imagem, $tecnologias, $descricao, $repositorio, $link_projeto, $privado, $id);
             if ($stmt->execute()) {
-                echo "<p style='color: green;'>Projeto atualizado com sucesso!</p>";
-                $projeto["nome"] = $nome;
-                $projeto["imagem"] = $imagem;
-                $projeto["tecnologias"] = $tecnologias;
-                $projeto["descricao"] = $descricao;
-                $projeto["repositorio"] = $repositorio;
-                $projeto["link_projeto"] = $link_projeto;
-                $projeto["privado"] = $privado;
+                echo "<div style='background-color: #ccffcc; padding: 10px; border-radius: 5px; color: #060;'>✅ Projeto atualizado com sucesso!</div>";
             } else {
-                echo "<p style='color: red;'>Erro ao atualizar projeto: " . $conn->error . "</p>";
+                echo "<div style='background-color: #ffcccc; padding: 10px; border-radius: 5px; color: #900;'>❌ Erro ao atualizar projeto: " . $conn->error . "</div>";
             }
             $stmt->close();
         } else {
-            // Inserir novo registro 
+            // Inserir novo projeto
             $stmt = $conn->prepare("INSERT INTO projetos (nome, imagem, tecnologias, descricao, repositorio, link_projeto, privado) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->bind_param("ssssssi", $nome, $imagem, $tecnologias, $descricao, $repositorio, $link_projeto, $privado);
             if ($stmt->execute()) {
-                echo "<p style='color: green;'>Projeto cadastrado com sucesso!</p>";
+                echo "<div style='background-color: #ccffcc; padding: 10px; border-radius: 5px; color: #060;'>✅ Projeto cadastrado com sucesso!</div>";
             } else {
-                echo "<p style='color: red;'>Erro ao cadastrar projeto: " . $conn->error . "</p>";
+                echo "<div style='background-color: #ffcccc; padding: 10px; border-radius: 5px; color: #900;'>❌ Erro ao cadastrar projeto: " . $conn->error . "</div>";
             }
             $stmt->close();
         }
     } else {
-        // Mensagem de erro campos obrigatórios
-        echo "<p style='color: red;'>Todos os campos são obrigatórios!</p>";
+        echo "<div style='background-color: #ffcccc; padding: 10px; border-radius: 5px; color: #900;'>⚠️ Todos os campos são obrigatórios!</div>";
     }
 }
 ?>
 
+<!-- Formulário  -->
 <div class="form-container">
     <h1><?php echo $id ? "Editar Projeto" : "Adicionar Projeto"; ?></h1>
 
     <form method="post" action="" enctype="multipart/form-data">
-        <!-- Nome do projeto -->
+        <!-- Nome -->
         <div class="field">
-            <label for="nome">Nome do Projeto</label>
+            <label for="nome">📌 Nome do Projeto</label>
             <input type="text" name="nome" id="nome" placeholder="Digite o nome do projeto" required
-                   value="<?php echo isset($projeto['nome']) ? htmlspecialchars($projeto['nome']) : ''; ?>" />
+                value="<?php echo isset($projeto['nome']) ? htmlspecialchars($projeto['nome']) : ''; ?>" />
         </div>
-        <!-- Imagem do projeto -->
+
+        <!-- Imagem -->
         <div class="field">
-            <label for="imagem">Imagem do Projeto</label>
-            <?php 
-            // Imagem cadastrada
-            if (isset($projeto['imagem']) && !empty($projeto['imagem'])): ?>
+            <label for="imagem">🖼️ Imagem do Projeto</label>
+            <?php if (isset($projeto['imagem']) && !empty($projeto['imagem'])): ?>
                 <img src="<?php echo $projeto['imagem']; ?>" alt="Imagem do projeto" style="width:100px;"><br>
             <?php endif; ?>
-            <!-- Upload de imagem -->
             <input type="file" name="imagem" id="imagem" accept="image/*" <?php echo $id ? '' : 'required'; ?> />
             <?php if ($id): ?>
-                <small>Deixe em branco para manter a imagem atual.</small>
+                <small>📢 Deixe em branco para manter a imagem atual.</small>
             <?php endif; ?>
         </div>
-        <!-- Tecnologias utilizadas no projeto -->
+
+        <!-- Tecnologias -->
         <div class="field">
-            <label for="tecnologias">Tecnologias</label>
+            <label for="tecnologias">🛠️ Tecnologias</label>
             <input type="text" name="tecnologias" id="tecnologias" placeholder="Ex.: HTML, CSS, JS" required
-                   value="<?php echo isset($projeto['tecnologias']) ? htmlspecialchars($projeto['tecnologias']) : ''; ?>" />
+                value="<?php echo isset($projeto['tecnologias']) ? htmlspecialchars($projeto['tecnologias']) : ''; ?>" />
         </div>
-        <!-- Descrição do projeto -->
+
+        <!-- Descrição -->
         <div class="field">
-            <label for="descricao">Descrição</label>
+            <label for="descricao">📝 Descrição</label>
             <textarea name="descricao" id="descricao" placeholder="Descreva o projeto em detalhes" rows="4" required><?php echo isset($projeto['descricao']) ? htmlspecialchars($projeto['descricao']) : ''; ?></textarea>
         </div>
-        <!-- Link do repositório -->
+
+        <!-- Repositório -->
         <div class="field">
-            <label for="repositorio">Repositório</label>
+            <label for="repositorio">📂 Repositório</label>
             <input type="url" name="repositorio" id="repositorio" placeholder="Link para o repositório" required
-                   value="<?php echo isset($projeto['repositorio']) ? htmlspecialchars($projeto['repositorio']) : ''; ?>" />
+                value="<?php echo isset($projeto['repositorio']) ? htmlspecialchars($projeto['repositorio']) : ''; ?>" />
         </div>
+
         <!-- Link do projeto -->
         <div class="field">
-            <label for="link_projeto">Link do Projeto</label>
+            <label for="link_projeto">🌍 Link do Projeto</label>
             <input type="url" name="link_projeto" id="link_projeto" placeholder="Link do projeto online" required
-                   value="<?php echo isset($projeto['link_projeto']) ? htmlspecialchars($projeto['link_projeto']) : ''; ?>" />
+                value="<?php echo isset($projeto['link_projeto']) ? htmlspecialchars($projeto['link_projeto']) : ''; ?>" />
         </div>
-        <!-- Indicar se o repositório é privado -->
+
+        <!-- Repositório privado -->
         <div class="field">
-            <label for="privado">Repositório Privado</label>
-            <label class="switch">
-                <input type="checkbox" name="privado" id="privado" <?php echo (isset($projeto['privado']) && $projeto['privado'] == 1) ? "checked" : ""; ?> />
-                <span class="slider"></span>
-            </label>
+            <label for="privado">🔒 Repositório Privado</label>
+            <input type="checkbox" name="privado" id="privado" <?php echo (isset($projeto['privado']) && $projeto['privado'] == 1) ? "checked" : ""; ?> />
         </div>
+
+        <!-- Botão de envio -->
         <div class="actions">
-            <input type="submit" value="<?php echo $id ? "Atualizar Projeto" : "Salvar Projeto"; ?>" class="btn-primary" />
+            <input type="submit" value="💾 Salvar Projeto" class="btn-primary" />
         </div>
     </form>
 </div>
 
-<?php 
-
-include('rodape.php'); 
+<?php
+include('rodape.php');
 ?>

@@ -24,7 +24,7 @@
 					<nav id="menu">
 						<ul class="links">
 							<li><a href="index.php">Início</a></li>
-							<li><a href="landing.html">Curriculo</a></li>
+							<li><a href="download.php">Currículo</a></li>
 							<li><a href="#contact">Contato</a></li>
 						</ul>
 						<ul class="actions stacked">

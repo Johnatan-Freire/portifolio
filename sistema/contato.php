@@ -1,7 +1,7 @@
 <?php
 include('cabecalho.php');
 
-// Criação tabela 
+// Criação da tabela
 $conn->query("CREATE TABLE IF NOT EXISTS contato (
     id INT PRIMARY KEY CHECK (id = 1),
     email VARCHAR(255) NOT NULL,
@@ -20,16 +20,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $linkedin = trim($_POST["linkedin"] ?? '');
     $github = trim($_POST["github"] ?? '');
 
-    // Upload currículo (PDF)
-    $curriculo = $contato["curriculo"] ?? "";
+    // Caminho fixo
+    $target_dir = "uploads/";
+    $curriculo = $target_dir . "curriculo.pdf"; // salvar como curriculo.pdf
+
+    // Verifica se um arquivo foi enviado
     if (!empty($_FILES["curriculo"]["name"])) {
-        $target_dir = "uploads/";
         $extensao = strtolower(pathinfo($_FILES["curriculo"]["name"], PATHINFO_EXTENSION));
 
         if ($extensao !== "pdf") {
             echo "<div style='background-color: #ffcccc; padding: 10px; border-radius: 5px; color: #900;'>❌ Apenas arquivos PDF são permitidos.</div>";
         } else {
-            $curriculo = $target_dir . basename($_FILES["curriculo"]["name"]);
+            if (file_exists($curriculo)) {
+                unlink($curriculo);
+            }
+
+            // Salvar currículo como curriculo.pdf
             if (move_uploaded_file($_FILES["curriculo"]["tmp_name"], $curriculo)) {
                 echo "<div style='background-color: #ccffcc; padding: 10px; border-radius: 5px; color: #060;'>✅ Currículo enviado com sucesso!</div>";
             } else {
@@ -37,6 +43,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $curriculo = $contato["curriculo"] ?? "";
             }
         }
+    } else {
+        $curriculo = $contato["curriculo"] ?? "";
     }
 
     // Validação dos campos
@@ -77,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <!-- Celular -->
         <div class="field">
-            <label for="celular">📱 celular</label>
+            <label for="celular">📱 Celular</label>
             <input type="tel" name="celular" id="celular" onkeyup="handlePhone(event)" placeholder="Digite seu celular" required
                 value="<?php echo htmlspecialchars($contato['celular'] ?? ''); ?>" />
         </div>
@@ -100,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="field">
             <label for="curriculo">📄 Currículo (PDF)</label>
             <?php if (!empty($contato['curriculo'])): ?>
-                <p><a href="<?php echo $contato['curriculo']; ?>" target="_blank">📂 Ver currículo atual</a></p>
+                <p><a href="curriculo.php" target="_blank">📂 Ver currículo atual</a></p>
             <?php endif; ?>
             <input type="file" name="curriculo" id="curriculo" accept="application/pdf" />
         </div>
@@ -127,6 +135,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         return value
     }
 </script>
-
 
 <?php include('rodape.php'); ?>

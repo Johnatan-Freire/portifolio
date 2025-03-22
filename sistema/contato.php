@@ -1,5 +1,7 @@
 <?php
-include('cabecalho.php');
+require_once('../includes/verificaLogin.php');
+require_once('includes/cabecalho.php');
+require_once('../includes/alerta.php');
 
 // Criação da tabela
 $conn->query("CREATE TABLE IF NOT EXISTS contato (
@@ -29,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $extensao = strtolower(pathinfo($_FILES["curriculo"]["name"], PATHINFO_EXTENSION));
 
         if ($extensao !== "pdf") {
-            echo "<div style='background-color: #ffcccc; padding: 10px; border-radius: 5px; color: #900;'>❌ Apenas arquivos PDF são permitidos.</div>";
+            exibirAlerta("Apenas arquivos PDF são permitidos.", "erro");
         } else {
             if (file_exists($curriculo)) {
                 unlink($curriculo);
@@ -136,4 +138,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 </script>
 
-<?php include('rodape.php'); ?>
+<?php include('includes/rodape.php'); ?>

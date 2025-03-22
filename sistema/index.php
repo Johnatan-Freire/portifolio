@@ -1,9 +1,9 @@
-    <?php
-    include('cabecalho.php');
+<?php
+require_once('../includes/verificaLogin.php');
+require_once('includes/cabecalho.php');
+?>
 
-    $query = "SELECT * FROM projetos ORDER BY data_criacao DESC";
-    $result = $conn->query($query);
-    ?>
+<div class="content-wrapper">
 
     <h1>Projetos</h1>
 
@@ -43,11 +43,8 @@
                 <?php endif; ?>
             </tbody>
         </table>
-
     </div>
 
-    <?php
+</div> 
 
-    include('rodape.php');
-
-    ?>
+<?php include('includes/rodape.php'); ?>

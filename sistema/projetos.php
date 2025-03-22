@@ -1,5 +1,7 @@
 <?php
-include('cabecalho.php');
+require_once('../includes/verificaLogin.php');
+require_once('includes/cabecalho.php');
+require_once('../includes/alerta.php');
 
 // Criação tabela
 $conn->query("CREATE TABLE IF NOT EXISTS projetos (
@@ -17,14 +19,14 @@ $id = isset($_GET['id']) ? intval($_GET['id']) : null;
 $projeto = [];
 
 // Buscar ID no banco
-if ($id) {
+if (!empty($id)) { 
     $stmt = $conn->prepare("SELECT * FROM projetos WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        $projeto = $result->fetch_assoc(); 
+        $projeto = $result->fetch_assoc();
     } else {
         echo "<div style='background-color: #ffcccc; padding: 10px; border-radius: 5px; color: #900;'>❌ Projeto não encontrado.</div>";
         exit;
@@ -60,12 +62,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Validação dos campos
     if (!empty($nome) && !empty($tecnologias) && !empty($descricao) && !empty($repositorio) && !empty($link_projeto)) {
-        if ($id) {
+        if (!empty($id)) { 
             // Atualizar projeto existente
             $stmt = $conn->prepare("UPDATE projetos SET nome = ?, imagem = ?, tecnologias = ?, descricao = ?, repositorio = ?, link_projeto = ?, privado = ? WHERE id = ?");
             $stmt->bind_param("ssssssii", $nome, $imagem, $tecnologias, $descricao, $repositorio, $link_projeto, $privado, $id);
             if ($stmt->execute()) {
-                echo "<div style='background-color: #ccffcc; padding: 10px; border-radius: 5px; color: #060;'>✅ Projeto atualizado com sucesso!</div>";
+                exibirAlerta("Projeto atualizado com sucesso!", "sucesso");
             } else {
                 echo "<div style='background-color: #ffcccc; padding: 10px; border-radius: 5px; color: #900;'>❌ Erro ao atualizar projeto: " . $conn->error . "</div>";
             }
@@ -89,7 +91,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!-- Formulário  -->
 <div class="form-container">
-    <h1><?php echo $id ? "Editar Projeto" : "Adicionar Projeto"; ?></h1>
+    <h1><?php echo (!empty($projeto)) ? "Editar Projeto" : "Adicionar Projeto"; ?></h1>
+
 
     <form method="post" action="" enctype="multipart/form-data">
         <!-- Nome -->
@@ -106,7 +109,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <img src="<?php echo $projeto['imagem']; ?>" alt="Imagem do projeto" style="width:100px;"><br>
             <?php endif; ?>
             <input type="file" name="imagem" id="imagem" accept="image/*" <?php echo $id ? '' : 'required'; ?> />
-            <?php if ($id): ?>
+            <?php if (!empty($id)) :
+            ?>
                 <small>📢 Deixe em branco para manter a imagem atual.</small>
             <?php endif; ?>
         </div>
@@ -141,16 +145,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <!-- Repositório privado -->
         <div class="field">
             <label for="privado">🔒 Repositório Privado</label>
-            <input type="checkbox" name="privado" id="privado" <?php echo (isset($projeto['privado']) && $projeto['privado'] == 1) ? "checked" : ""; ?> />
+            <label class="switch">
+                <input type="checkbox" name="privado" id="privado" <?php echo (isset($projeto['privado']) && $projeto['privado'] == 1) ? "checked" : ""; ?> />
+                <span class="slider"></span>
+            </label>
         </div>
 
-        <!-- Botão de envio -->
+        <!-- Botão de envio/atualização -->
         <div class="actions">
-            <input type="submit" value="💾 Salvar Projeto" class="btn-primary" />
+            <input type="submit" value="<?php echo (!empty($projeto)) ? "Atualizar Projeto" : "Salvar Projeto"; ?>" class="btn-primary" />
         </div>
     </form>
 </div>
 
 <?php
-include('rodape.php');
+include('includes/rodape.php');
 ?>

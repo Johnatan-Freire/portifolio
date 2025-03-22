@@ -1,47 +1,61 @@
-<!-- portifolio/login.php -->
-
-<!DOCTYPE html>
 <?php
-include('sistema/config/conexao.php'); 
-
 session_start();
+require_once('includes/cabecalho.php');
 
+// Verifica se a conexão foi estabelecida corretamente
+if (!$conn) {
+    die("Erro: Não foi possível conectar ao banco de dados.");
+}
+
+// Verifica se o usuário já está logado
 if (isset($_SESSION['user_id'])) {
     header("Location: sistema/index.php");
     exit();
 }
 
+// Inicializa variável de erro
+$erro = "";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
     $password = $_POST['password'];
 
-    if ($email) {
+    if ($email && !empty($password)) {
         $sql = "SELECT * FROM usuarios WHERE email = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        
+        if ($stmt) {
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            if (password_verify($password, $row['senha'])) {
-                session_regenerate_id(true);
-                $_SESSION['user_id'] = $row['id']; 
-                $_SESSION['user_email'] = $row['email'];
-                header("Location: sistema/index.php");
-                exit();
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                if (password_verify($password, $row['senha'])) {
+                    session_regenerate_id(true);
+                    $_SESSION['user_id'] = $row['id']; 
+                    $_SESSION['user_email'] = $row['email'];
+                    header("Location: sistema/index.php");
+                    exit();
+                }
             }
+        } else {
+            $erro = "Erro na consulta ao banco de dados.";
         }
+    } else {
+        $erro = "Credenciais inválidas.";
     }
-    echo "Credenciais inválidas.";
 }
 ?>
 
-<?php include('cabecalho.php') ?>
-
 <div class="form-container">
     <h1>Login</h1>
-    <form method="post" action="#">
+
+    <?php if (!empty($erro)): ?>
+        <p style="color: red;"><?php echo $erro; ?></p>
+    <?php endif; ?>
+
+    <form method="post" action="">
         <div class="field">
             <label for="email">E-mail</label>
             <input type="email" name="email" id="email" placeholder="Digite seu e-mail" required />
@@ -56,5 +70,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
 </div>
 
-
-<?php include('rodape.php') ?>
+<?php include('includes/rodape.php'); ?>

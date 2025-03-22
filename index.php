@@ -1,15 +1,16 @@
-<!DOCTYPE HTML>
+<?php
+require_once('includes/cabecalho.php');
+
+$query = "SELECT nome, imagem, descricao, tecnologias, repositorio, privado, link_projeto FROM projetos";
+$result = $conn->query($query);
+?>
+
 <!--
 	Forty by HTML5 UP
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 
-<?php
-include('cabecalho.php');
-$query = "SELECT nome, imagem, descricao, tecnologias, repositorio, privado, link_projeto FROM projetos";
-$result = $conn->query($query);
-?>
 <!-- Banner -->
 <section id="banner" class="major">
 	<div class="inner">
@@ -74,4 +75,4 @@ $result = $conn->query($query);
 		</div>
 	</section>
 </div>
-<?php include('rodape.php'); ?>
+<?php include('includes/rodape.php'); ?>

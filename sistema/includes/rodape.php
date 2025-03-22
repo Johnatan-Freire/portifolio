@@ -1,7 +1,6 @@
 <!-- Admin Footer -->
 <footer id="admin-footer">
     <div class="inner">
-        
         <p>&copy; 2025 Painel Administrativo.</p>
     </div>
 </footer>

@@ -1,3 +1,12 @@
+<?php
+ob_start();
+
+require_once('config/conexao.php');
+
+$query = "SELECT * FROM projetos ORDER BY data_criacao DESC";
+$result = $conn->query($query);
+?>
+
 <html>
 
 <head>
@@ -11,17 +20,6 @@
 </head>
 
 <body class="is-preload">
-
-	<?php
-	session_start();
-
-	if (!isset($_SESSION['user_id'])) {
-		header("Location: ./login.php");
-		exit();
-	}
-	include('config/conexao.php');
-	?>
-
 	<!-- Wrapper -->
 	<div id="wrapper">
 

@@ -1,38 +1,32 @@
-<?php require_once('sistema/config/conexao.php'); ?>
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once('sistema/config/conexao.php');
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
 	<title>Portfólio</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<link rel="stylesheet" href="assets/css/main.css" />
-	<noscript>
-		<link rel="stylesheet" href="assets/css/noscript.css" />
-	</noscript>
+	<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
-
 <body class="is-preload">
-	<!-- Wrapper -->
-	<div id="wrapper">
-
-		<!-- Header -->
-		<header id="header" class="alt">
-			<a href="index.php" class="logo"><strong>Portfólio</strong> <span>Johnatan Santos</span></a>
-			<nav>
-				<a href="#menu">Menu</a>
-			</nav>
-		</header>
-
-		<!-- Menu -->
-		<nav id="menu">
-			<ul class="links">
-				<li><a href="index.php">Início</a></li>
-				<li><a href="download.php">Currículo</a></li>
-				<li><a href="#contact">Contato</a></li>
-			</ul>
-			<ul class="actions stacked">
-				<li><a href="login.php" class="button fit">Login</a></li>
-			</ul>
-		</nav>
+<div id="wrapper">
+	<header id="header" class="alt">
+		<a href="index.php" class="logo"><strong>Portfólio</strong> <span>Johnatan Santos</span></a>
+		<nav><a href="#menu">Menu</a></nav>
+	</header>
+	<nav id="menu">
+		<ul class="links">
+			<li><a href="index.php">Início</a></li>
+			<li><a href="download.php">Currículo</a></li>
+			<li><a href="#contact">Contato</a></li>
+		</ul>
+		<ul class="actions stacked">
+			<li><a href="login.php" class="button fit">Login</a></li>
+		</ul>
+	</nav>

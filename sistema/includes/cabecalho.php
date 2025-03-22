@@ -2,6 +2,7 @@
 ob_start();
 
 require_once('config/conexao.php');
+require_once('../../includes/verificaLogin.php');
 
 $query = "SELECT * FROM projetos ORDER BY data_criacao DESC";
 $result = $conn->query($query);

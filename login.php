@@ -1,19 +1,9 @@
 <?php
-session_start();
-require_once('includes/cabecalho.php');
-
-// Verifica se a conexão foi estabelecida corretamente
-if (!$conn) {
-    die("Erro: Não foi possível conectar ao banco de dados.");
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
+require_once('sistema/config/conexao.php');
 
-// Verifica se o usuário já está logado
-if (isset($_SESSION['user_id'])) {
-    header("Location: sistema/index.php");
-    exit();
-}
-
-// Inicializa variável de erro
 $erro = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -23,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($email && !empty($password)) {
         $sql = "SELECT * FROM usuarios WHERE email = ?";
         $stmt = $conn->prepare($sql);
-        
+
         if ($stmt) {
             $stmt->bind_param("s", $email);
             $stmt->execute();
@@ -33,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $row = $result->fetch_assoc();
                 if (password_verify($password, $row['senha'])) {
                     session_regenerate_id(true);
-                    $_SESSION['user_id'] = $row['id']; 
+                    $_SESSION['user_id'] = $row['id'];
                     $_SESSION['user_email'] = $row['email'];
                     header("Location: sistema/index.php");
                     exit();
@@ -46,6 +36,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $erro = "Credenciais inválidas.";
     }
 }
+
+require_once('includes/cabecalho.php');
 ?>
 
 <div class="form-container">
